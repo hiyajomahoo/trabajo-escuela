@@ -32,9 +32,9 @@ router.post('/iniciarSesion', async (req, res) => {
     }
 
     try {
-        const query = `SELECT * FROM usuario_sistema WHERE nombre_usuario = ?`
+        const consulta = `SELECT * FROM usuario_sistema WHERE nombre_usuario = ?`
         const conexion = await pool.getConnection()
-        const [respuesta] = await conexion.query(query, nombre)
+        const [respuesta] = await conexion.query(consulta, nombre)
         conexion.release()
 
         if (!await bcrypt.compare(password, respuesta[0].contraseña)) {
@@ -73,10 +73,10 @@ router.post('/crearUsuario', verificarUsuario, async (req, res) => {
     try {
         const salt = await bcrypt.genSalt(rondasSalt)
         const contraseñaHash = await bcrypt.hash(password, salt)
-        const query = `INSERT INTO usuario_sistema (nombre_usuario, contraseña, admin) VALUES (?, ?, 0)`
+        const consulta = `INSERT INTO usuario_sistema (nombre_usuario, contraseña, admin) VALUES (?, ?, 0)`
         
         const conexion = await pool.getConnection()
-        const [respuesta] = await conexion.query(query, [nombre, contraseñaHash])
+        const [respuesta] = await conexion.query(consulta, [nombre, contraseñaHash])
         conexion.release()
         res.send("Usuario creado satisfactoriamente.")
     } catch (error) {

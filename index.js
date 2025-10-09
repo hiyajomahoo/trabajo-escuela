@@ -10,7 +10,7 @@ app.use(express.json())
 // Autenticacion
 app.use(cors())
 app.use('/usuarios', autenticacion)
-app.use(verificarUsuario)
+/* app.use(verificarUsuario) */
 
 // CRUD Alumnos
 
@@ -22,6 +22,27 @@ app.get('/alumnos', async (req, res) => {
         res.json(respuesta)
     } catch (error) {
         res.status(500).send("Error al realizar la consulta.")
+    }
+})
+
+// Se envia mediante el body los campos Nombre (obligatorio)
+// y apellido (opcional) y se busca en la base de datos y se
+// devuelven los resultados.
+app.get('/alumnos/buscarNombre/', async (req, res) => {
+    if (!req.body) return res.status(400).send("Parametros insuficientes.")
+    let {nombre, apellido} = req.body
+    nombre = '%' + nombre + '%'
+    if (apellido != undefined) apellido = '%' + apellido + '%'
+
+    const consulta = `SELECT * FROM alumnos WHERE nombre_alum LIKE ? ` + (apellido != undefined ? `AND apellido_alum LIKE ?` : ``)
+    
+    try {
+        const conexion = await pool.getConnection()
+        const [respuesta] = await conexion.query(consulta, [nombre, apellido])
+        conexion.release()
+        res.json(respuesta)
+    } catch (error) {
+        res.status(500).send("Error al realizar la consulta")
     }
 })
 
@@ -39,8 +60,6 @@ app.get('/alumnos/:id', async (req, res) => {
     }
 })
 
-// Falta verificar que esten todos los campos en el body
-
 app.post('/alumnos', async (req, res) => {
     const consulta = 'INSERT INTO alumnos SET ?'
     const alumno = req.body
@@ -53,8 +72,6 @@ app.post('/alumnos', async (req, res) => {
         res.status(500).send("Error al realizar la consulta.")
     }
 })
-
-// Lo mismo
 
 app.put('/alumnos/:id', async (req, res) => {
     const consulta = 'UPDATE alumnos SET ? WHERE id_alum = ?'
