@@ -4,16 +4,7 @@ const pool = mysql.createPool({
     user: 'root',
     password: '',
     database: 'escuela',
-    connectionLimit: 3
-})
-
-pool.getConnection()
-.then(connection => {
-    console.log('Conexion exitosa')
-    connection.release()
-})
-.catch(error => {
-    console.log('Error de conexion')
+    connectionLimit: 5
 })
 
 export default pool
