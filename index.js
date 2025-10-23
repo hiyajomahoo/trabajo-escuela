@@ -35,25 +35,25 @@ app.get('/alumnos', async (req, res) => {
 })
 
 /* 
-    GET /alumnos/buscarNombre
+    POST /alumnos/buscarNombre
     Descripcion:
         - Permite buscar a uno o varios alumnos segun el nombre y apellido ingresado
     Cuerpo (body): 
         - nombre (requerido)
         - apellido
     Respuestas:
-        - 200 OK: Devuelve la lista de alumnos que coincide el nombre y/o apellido
+        - 200 OK: Devuelve id, dni, nombre, apellido y curso del alumno.
         - 401 Authorization Required: El token es invalido
         - 403 Forbidden: El usuario no esta autenticado
         - 500 Internal server error: Hubo un error en la consulta
 */
-app.get('/alumnos/buscarNombre/', async (req, res) => {
+app.post('/alumnos/buscarNombre/', async (req, res) => {
     if (!req.body) return res.status(400).send("Parametros insuficientes.")
     let {nombre, apellido} = req.body
-    nombre = '%' + nombre + '%'
+    nombre = nombre + '%'
     if (apellido != undefined) apellido = '%' + apellido + '%'
 
-    const consulta = `SELECT * FROM alumnos WHERE nombre_alum LIKE ? ` + (apellido != undefined ? `AND apellido_alum LIKE ?` : ``)
+    const consulta = `SELECT alumnos.id_alum, alumnos.dni, alumnos.nombre_alum, alumnos.apellido_alum, cursos.anio, cursos.division, especialidades.nombre_especialidad FROM alumnos JOIN cursos ON alumnos.id_curso = cursos.id_curso JOIN especialidades ON cursos.id_especialidad = especialidades.id_especialidad WHERE nombre_alum LIKE ? ` + (apellido != undefined ? `AND apellido_alum LIKE ?` : ``)
     
     try {
         const conexion = await pool.getConnection()
@@ -62,6 +62,7 @@ app.get('/alumnos/buscarNombre/', async (req, res) => {
         res.status(200).json(respuesta)
     } catch (error) {
         res.status(500).send("Error al realizar la consulta")
+        console.log(error)
     }
 })
 
@@ -76,11 +77,11 @@ app.get('/alumnos/buscarNombre/', async (req, res) => {
         - 401 Authorization Required: El token es invalido
         - 403 Forbidden: El usuario no esta autenticado
         - 404 Not Found: El usuario pedido no existe.
-        - 500 Internal server error: Hubo un error en la consulta
+        - 500 Internal server error: Hubo un error en la consulta o parametros insuficientes.
 */
 
 app.get('/alumnos/:id', async (req, res) => {
-    const consulta = 'SELECT * FROM alumnos WHERE id_alum = ?'
+    const consulta = 'SELECT id_alum, dni, nombre_alum, apellido_alum, cursos.anio, cursos.division, especialidades.nombre_especialidad, grupo, telefono, direccion, contactos_emergencia, observaciones FROM alumnos JOIN cursos ON alumnos.id_curso = cursos.id_curso JOIN especialidades ON cursos.id_especialidad = especialidades.id_especialidad WHERE id_alum = ?'
     const id = req.params.id
 
     try {
@@ -88,8 +89,9 @@ app.get('/alumnos/:id', async (req, res) => {
         const [respuesta] = await conexion.query(consulta, id)
         conexion.release()
         respuesta[0] ? res.status(200).json(respuesta[0]) : res.status(404).send("El alumno no existe")
-    } catch {
+    } catch(error) {
         res.status(500).send("Error al realizar la consulta")
+        console.log(error)
     }
 })
 
@@ -147,7 +149,7 @@ app.post('/alumnos', async (req, res) => {
         - 200 OK: El alumno es modificado satisfactoriamente
         - 401 Authorization Required: El token es invalido
         - 403 Forbidden: El usuario no esta autenticado
-        - 500 Internal server error: Hubo un error en la consulta
+        - 500 Internal server error: Hubo un error en la consulta o parametros insuficientes.
 */
 
 app.put('/alumnos/:id', async (req, res) => {

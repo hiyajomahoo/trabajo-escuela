@@ -1,0 +1,192 @@
+/* Estilos generales del cuerpo de la página */
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background-color: #ffffff; /* Fondo blanco liso */
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Contenedor principal de la aplicación */
+.main-container {
+    width: 100%;
+    max-width: 420px; /* Ancho máximo para el contenido */
+    text-align: center;
+}
+
+/* Estilo para la imagen del logo */
+.logo {
+    width: 100px; /* Ajusta el tamaño según tu logo */
+    margin-bottom: 20px;
+}
+
+/* Estilo para el título "Buscar Alumno" */
+h1 {
+    color: #0d47a1; /* Azul oscuro para el título */
+    font-size: 28px;
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: 30px;
+}
+
+/* Formulario de búsqueda */
+#formularioBusqueda {
+    display: flex;
+    gap: 10px; /* Espacio entre el campo de texto y el botón */
+    margin-bottom: 40px;
+}
+
+/* Campo de texto para buscar */
+#formularioBusqueda input[type="text"] {
+    flex-grow: 1; /* El campo de texto ocupa el espacio disponible */
+    padding: 12px 15px;
+    border: 1px solid #ced4da; /* Borde gris claro */
+    border-radius: 8px;
+    font-size: 16px;
+    color: #555;
+}
+
+#formularioBusqueda input[type="text"]::placeholder {
+    color: #999;
+}
+
+#formularioBusqueda input[type="text"]:focus {
+    outline: none;
+    border-color: #0d47a1; /* Borde azul al hacer foco */
+}
+
+/* Botón de "Buscar" */
+#formularioBusqueda button {
+    padding: 12px 20px;
+    background-color: #0d47a1; /* Azul principal */
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#formularioBusqueda button:hover {
+    background-color: #0a3a82; /* Azul más oscuro al pasar el mouse */
+}
+
+/* Contenedor para las tarjetas de resultados */
+#listaResultados {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Espacio entre las tarjetas */
+}
+
+/* Estilo individual de cada tarjeta de alumno */
+.student-card {
+    background-color: #ffffff;
+    border: 2px solid #ffca28; /* Borde amarillo/dorado */
+    border-radius: 12px;
+    padding: 15px;
+    text-align: left;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Nombre del alumno en la tarjeta */
+.student-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+/* Contenedor para la información (DNI y Curso) */
+.student-info {
+    display: flex;
+    justify-content: space-between; /* Coloca el DNI a la izquierda y el Curso a la derecha */
+    align-items: center;
+    font-size: 14px;
+    color: #555;
+}
+/* --- Estilos del MODAL (Ventana Emergente) --- */
+
+#studentModal {
+    position: fixed;
+    width: 100vmin;
+    height: 100vmin;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-backdrop {
+    /* Estado inicial: Oculto y con el fondo oscuro */
+    display: none; 
+    
+    /* Fija el modal sobre todo el contenido */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    
+    /* Fondo semi-transparente oscuro */
+    background-color: rgba(0, 0, 0, 0.6); 
+    
+    /* Centrar el contenido del modal */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Asegura que esté por encima de todos los demás elementos */
+}
+
+.modal-content {
+    background-color: #ffffff;
+    width: 90%;
+    max-width: 350px; /* Tamaño máximo de la ventana */
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+    color: #0d47a1; /* Azul oscuro */
+    font-size: 22px;
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+/* Estructura de la información (dos columnas) */
+.data-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Dos columnas para Etiqueta y Valor */
+    gap: 10px 5px; 
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.data-label {
+    font-weight: 400;
+    color: #333;
+    font-size: 14px;
+}
+
+.data-value {
+    font-weight: 600;
+    color: #0d47a1; /* Valor en azul para destacar */
+    font-size: 14px;
+}
+
+/* Estilos para la sección de Observaciones */
+.observations-section {
+    border-top: 1px solid #eee;
+    padding-top: 15px;
+    text-align: left;
+}
+
+.data-value-obs {
+    margin-top: 5px;
+    font-weight: 600;
+    color: #0d47a1; 
+    font-size: 14px;
+}
