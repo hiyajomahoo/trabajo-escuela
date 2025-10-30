@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 30, 2025 at 06:28 PM
+-- Generation Time: Oct 30, 2025 at 10:17 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -45,7 +45,7 @@ CREATE TABLE `alumnos` (
 --
 
 INSERT INTO `alumnos` (`id_alum`, `dni`, `nombre_alum`, `apellido_alum`, `id_curso`, `grupo`, `telefono`, `direccion`, `contactos_emergencia`, `observaciones`) VALUES
-(1, '47963144', 'Patricio Joaquin', 'Muras Caravello', 47, 'A', '1122383785', 'Av. Debenedetti 2100', 'Juan Manuel Muras\r\nPadre\r\n1170384924', 'Ninguna');
+(1, '47963144', 'Patricio Joaquín', 'Muras Caravello', 47, 'B', '1122383785', 'Av. Debenedetti 2100', 'Contacto', 'Ninguna');
 
 -- --------------------------------------------------------
 
@@ -432,7 +432,7 @@ CREATE TABLE `usuario_sistema` (
 --
 
 INSERT INTO `usuario_sistema` (`id_usuario`, `nombre_usuario`, `contraseña`, `admin`) VALUES
-(7, 'patitow', '$2b$12$.MxDcVU6465ZZSWpEgbAUuhdEDwomkKMLZAUGCPQobtG5l7p2LY1i', 0);
+(8, 'administrador', '$2b$12$kmmwN8UK2HYg6Z5WiQyJI.XDaBE0Ht1mjyhtVgQJMhRY.YRQB4c8y', 0);
 
 --
 -- Indexes for dumped tables
@@ -505,7 +505,7 @@ ALTER TABLE `usuario_sistema`
 -- AUTO_INCREMENT for table `alumnos`
 --
 ALTER TABLE `alumnos`
-  MODIFY `id_alum` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_alum` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `cursos`
@@ -547,7 +547,7 @@ ALTER TABLE `turnos`
 -- AUTO_INCREMENT for table `usuario_sistema`
 --
 ALTER TABLE `usuario_sistema`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- Constraints for dumped tables
