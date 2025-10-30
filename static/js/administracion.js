@@ -104,16 +104,23 @@ async function editarAlumno(id) {
     }
 
     const inputs = {}
-    for (const [nombre, tipo] of Object.entries(campos)) {
-        const input = document.createElement(tipo == 'text' ? 'input' : 'select')
-        // Sacamos el input y queda el mismo nombre que los campos recibidos de la API
-        const campo = nombre.replace(/^input/, '').toLowerCase()
-        if (campo != 'id_curso') {
-            input.value = alumno[campo]
-            input.type = tipo
-        }
-        input.className = 'data-value editable'
-        inputs[nombre] = input
+        for (const [nombre, tipo] of Object.entries(campos)) {
+            const isLargeText = nombre === 'inputContactos_emergencia' || nombre === 'inputObservaciones'
+            const tag = isLargeText ? 'textarea' : (tipo == 'text' ? 'input' : 'select')
+            const input = document.createElement(tag)
+            // Sacamos el input y queda el mismo nombre que los campos recibidos de la API
+            const campo = nombre.replace(/^input/, '').toLowerCase()
+            if (campo != 'id_curso') {
+                if (tag === 'textarea') {
+                    input.value = alumno[campo] || ''
+                    input.rows = 4
+                } else {
+                    input.value = alumno[campo]
+                    input.type = tipo
+                }
+            }
+            input.className = `data-value editable ${campo}` + (isLargeText ? ' large-textarea' : '')
+            inputs[nombre] = input
     }
 
     cursos.forEach(curso => {
@@ -128,7 +135,7 @@ async function editarAlumno(id) {
     botonCerrar.innerHTML = "Cerrar"
     botonCerrar.addEventListener("click", (e) => {
         e.preventDefault()
-        botonCerrar.parentElement.remove()
+        botonCerrar.parentElement.parentElement.remove()
     })
 
     let botonEditar = document.createElement("button")
@@ -157,15 +164,19 @@ async function editarAlumno(id) {
             console.log(error)
             return
         }
-        botonEditar.parentElement.remove()
+        botonEditar.parentElement.parentElement.remove()
         renderizarLista()
     })
+
+    const studentModal = document.createElement("div")
+    studentModal.id = "studentModal"
 
     Object.values(inputs).forEach(input => dataGrid.append(input))
     formularioEdicion.append(dataGrid)
     formularioEdicion.append(botonEditar)
     formularioEdicion.append(botonCerrar)
-    document.body.append(formularioEdicion)
+    studentModal.append(formularioEdicion)
+    document.body.append(studentModal)
 }
 
 async function eliminarAlumno(id) {
@@ -211,16 +222,22 @@ async function crearAlumno() {
     }
 
     const inputs = {}
-    for (const [nombre, tipo] of Object.entries(campos)) {
-        const input = document.createElement(tipo == 'text' ? 'input' : 'select')
-        // Sacamos el input y queda el mismo nombre que los campos recibidos de la API
-        const campo = nombre.replace(/^input/, '').toLowerCase()
-        if (campo != 'id_curso') {
-            input.placeholder = campo
-            input.type = tipo
-        }
-        input.className = 'data-value editable'
-        inputs[nombre] = input
+        for (const [nombre, tipo] of Object.entries(campos)) {
+            const isLargeText = nombre === 'inputContactos_emergencia' || nombre === 'inputObservaciones'
+            const tag = isLargeText ? 'textarea' : (tipo == 'text' ? 'input' : 'select')
+            const input = document.createElement(tag)
+            // Sacamos el input y queda el mismo nombre que los campos recibidos de la API
+            const campo = nombre.replace(/^input/, '').toLowerCase()
+            if (campo != 'id_curso') {
+                input.placeholder = campo
+                if (tag === 'textarea') {
+                    input.rows = 4
+                } else {
+                    input.type = tipo
+                }
+            }
+            input.className = `data-value editable ${campo}` + (isLargeText ? ' large-textarea' : '')
+            inputs[nombre] = input
     }
 
     cursos.forEach(curso => {
@@ -234,7 +251,7 @@ async function crearAlumno() {
     botonCerrar.innerHTML = "Cerrar"
     botonCerrar.addEventListener("click", (e) => {
         e.preventDefault()
-        botonCerrar.parentElement.remove()
+        botonCerrar.parentElement.parentElement.remove()
     })
 
     let botonEditar = document.createElement("button")
@@ -244,9 +261,10 @@ async function crearAlumno() {
         let alumno = {}
         for (const [nombre, tipo] of Object.entries(campos)) {
             const campo = nombre.replace(/^input/, '').toLowerCase()
+            if (alumno[campo].length < 1) return
             alumno[campo] = inputs[nombre].value
         }
-        console.log(alumno)
+
         try {
             const respuestaEdit = await fetch(`http://localhost:3000/alumnos/`, {
                 method: 'POST',
@@ -260,14 +278,18 @@ async function crearAlumno() {
             console.log(error)
             return
         }
-        botonEditar.parentElement.remove()
+        botonEditar.parentElement.parentElement.remove()
         renderizarLista()
     }) 
+    const studentModal = document.createElement("div")
+    studentModal.id = "studentModal"
+
     Object.values(inputs).forEach(input => dataGrid.append(input))
     formularioEdicion.append(dataGrid)
     formularioEdicion.append(botonEditar)
     formularioEdicion.append(botonCerrar)
-    document.body.append(formularioEdicion)
+    studentModal.append(formularioEdicion)
+    document.body.append(studentModal)
 }
 
 async function renderizarLista(nombre, apellido) {

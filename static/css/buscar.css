@@ -14,7 +14,6 @@
     background-color: #fff;
     border-bottom: 2px solid #ccc;
     padding: 10px 20px;
-    z-index: 100;
     box-sizing: border-box;
 }
 
@@ -58,29 +57,11 @@ body {
     min-height: 100vh;
 }
 
-.navbar {
-    display: flex;
-    align-items: center;
-    background-color: #fff;
-    border-bottom: 2px solid #ccc;
-    padding: 10px 20px;
-}
-
-.nav-left {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
-
 .logo {
     width: 90px;
     height: auto;
-}
+    margin-top: 25vmin;
 
-.nav-link {
-    text-decoration: none;
-    color: #333;
-    font-weight: 600;
 }
 
 .main-container {
@@ -88,11 +69,6 @@ body {
     max-width: 460px; 
     text-align: center;
     margin: 0 auto;
-}
-
-.logo {
-    width: 100px; 
-    margin-bottom: 20px;
 }
 
 h1 {
