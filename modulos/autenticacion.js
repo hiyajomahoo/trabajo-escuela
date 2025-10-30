@@ -74,7 +74,7 @@ router.post('/iniciarSesion', async (req, res) => {
         res.cookie('token', token, {
             httpOnly: true,
             sameSite: 'none',
-            secure: false,
+            secure: true,
             maxAge: 43200000 // 12 horas en milisegundos
         })
 

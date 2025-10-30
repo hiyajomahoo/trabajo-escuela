@@ -37,11 +37,33 @@ app.use(verificarUsuario)
 app.get('/alumnos', async (req, res) => {
     try {
         const conexion = await pool.getConnection()
-        const [respuesta] = await conexion.query("SELECT alumnos.id_alum, alumnos.dni, alumnos.nombre_alum, alumnos.apellido_alum, cursos.anio, cursos.division, especialidades.nombre_especialidad FROM alumnos JOIN cursos ON alumnos.id_curso = cursos.id_curso JOIN especialidades ON cursos.id_especialidad = especialidades.id_especialidad")
+        const [respuesta] = await conexion.query("SELECT alumnos.id_alum, alumnos.dni, alumnos.nombre_alum, alumnos.apellido_alum, cursos.anio, cursos.division, especialidades.nombre_especialidad, alumnos.id_curso FROM alumnos JOIN cursos ON alumnos.id_curso = cursos.id_curso JOIN especialidades ON cursos.id_especialidad = especialidades.id_especialidad")
         conexion.release()
         res.json(respuesta)
     } catch (error) {
         res.status(500).send("Error al realizar la consulta.")
+    }
+})
+
+/* 
+    GET /cursos/
+    Descripcion:
+        - Permite obtener a todos los alumnos de la base de datos.
+    Respuestas:
+        - 200 OK: Devuelve la tabla de cursos
+        - 401 Authorization Required: El token es invalido
+        - 403 Forbidden: El usuario no esta autenticado
+        - 500 Internal server error: Hubo un error en la consulta
+*/
+
+app.get('/cursos', async (req, res) => {
+    try {
+        const conexion = await pool.getConnection()
+        const [respuesta] = await conexion.query("SELECT cursos.id_curso, cursos.anio, cursos.division, especialidades.nombre_especialidad, turnos.descripcion_turno FROM cursos JOIN especialidades ON cursos.id_especialidad = especialidades.id_especialidad JOIN turnos ON cursos.id_turno = turnos.id_turno")        
+        conexion.release()
+        res.json(respuesta)
+    } catch (error) {
+        res.status(500).json({message:"Error al realizar la consulta."})
     }
 })
 
@@ -92,7 +114,7 @@ app.post('/alumnos/buscarNombre/', async (req, res) => {
 */
 
 app.get('/alumnos/:id', async (req, res) => {
-    const consulta = 'SELECT id_alum, dni, nombre_alum, apellido_alum, cursos.anio, cursos.division, especialidades.nombre_especialidad, grupo, telefono, direccion, contactos_emergencia, observaciones FROM alumnos JOIN cursos ON alumnos.id_curso = cursos.id_curso JOIN especialidades ON cursos.id_especialidad = especialidades.id_especialidad WHERE id_alum = ?'
+    const consulta = 'SELECT id_alum, dni, nombre_alum, apellido_alum, cursos.anio, cursos.division, especialidades.nombre_especialidad, grupo, telefono, direccion, contactos_emergencia, observaciones, alumnos.id_curso FROM alumnos JOIN cursos ON alumnos.id_curso = cursos.id_curso JOIN especialidades ON cursos.id_especialidad = especialidades.id_especialidad WHERE id_alum = ?'
     const id = req.params.id
 
     try {
@@ -175,6 +197,7 @@ app.put('/alumnos/:id', async (req, res) => {
         conexion.release()
         res.status(200).send("Alumno modificado satisfactoriamente")
     } catch (error) {
+        console.log(error)
         res.status(500).send("Error al realizar la consulta")
     }
 })
@@ -193,11 +216,12 @@ app.put('/alumnos/:id', async (req, res) => {
 */
 
 app.delete('/alumnos/:id', async (req, res) => {
-    const consulta = 'DELETE * FROM alumnos WHERE id_alum = ?'
+    const consulta = 'DELETE FROM alumnos WHERE id_alum = ?'
     const id = req.params.id
 
     try {
         const conexion = await pool.getConnection()
+        const [respuesta] = await conexion.query(consulta, [id])
         conexion.release()
         res.send("Alumno eliminado satisfactoriamente")
     } catch (error) {

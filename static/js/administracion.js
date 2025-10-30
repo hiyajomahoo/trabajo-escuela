@@ -60,9 +60,234 @@ async function verAlumno(id) {
     document.body.append(contenedor)
 }
 
-function renderizarLista(nombre, apellido) {
+async function editarAlumno(id) {
+    const contenedor = document.createElement('div')
+    contenedor.id = "studentModal"
+
+    let respuesta = await fetch(`http://localhost:3000/alumnos/${id}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        credentials: "include"
+    })
+
+    let alumno = await respuesta.json()
+
+    respuesta = await fetch(`http://localhost:3000/cursos`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        credentials: "include"
+    })
+
+    const cursos = await respuesta.json()
+
+    const formularioEdicion = document.createElement('form')
+    formularioEdicion.id = "formularioEdicion"
+    formularioEdicion.className = "modal-content"
+
+    const dataGrid = document.createElement('div')
+    dataGrid.className = "data-grid"
+
+    const campos = {
+        inputNombre_alum: 'text',
+        inputApellido_alum: 'text',
+        inputDNI: 'text',
+        inputId_curso: 'select',
+        inputGrupo: 'text',
+        inputTelefono: 'text',
+        inputDireccion: 'text',
+        inputContactos_emergencia: 'text',
+        inputObservaciones: 'text',
+    }
+
+    const inputs = {}
+    for (const [nombre, tipo] of Object.entries(campos)) {
+        const input = document.createElement(tipo == 'text' ? 'input' : 'select')
+        // Sacamos el input y queda el mismo nombre que los campos recibidos de la API
+        const campo = nombre.replace(/^input/, '').toLowerCase()
+        if (campo != 'id_curso') {
+            input.value = alumno[campo]
+            input.type = tipo
+        }
+        input.className = 'data-value editable'
+        inputs[nombre] = input
+    }
+
+    cursos.forEach(curso => {
+        const option = document.createElement('option')
+        option.value = curso.id_curso
+        option.textContent = `${curso.anio} ${curso.division} ${curso.nombre_especialidad} ${curso.descripcion_turno}`
+        if (option.value == alumno.id_curso) option.selected = 'selected'
+        inputs.inputId_curso.appendChild(option)
+    }) 
+    
+    let botonCerrar = document.createElement("button")
+    botonCerrar.innerHTML = "Cerrar"
+    botonCerrar.addEventListener("click", (e) => {
+        e.preventDefault()
+        botonCerrar.parentElement.remove()
+    })
+
+    let botonEditar = document.createElement("button")
+    botonEditar.innerHTML = "Guardar cambios"
+    botonEditar.addEventListener("click", async (e) => {
+        e.preventDefault()
+        for (const [nombre, tipo] of Object.entries(campos)) {
+            const campo = nombre.replace(/^input/, '').toLowerCase()
+            alumno[campo] = inputs[nombre].value
+        }
+
+        delete alumno.anio
+        delete alumno.division
+        delete alumno.nombre_especialidad
+
+        try {
+            const respuestaEdit = await fetch(`http://localhost:3000/alumnos/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: "include",
+                body: JSON.stringify(alumno)
+            })
+        } catch (error) {
+            console.log(error)
+            return
+        }
+        botonEditar.parentElement.remove()
+        renderizarLista()
+    })
+
+    Object.values(inputs).forEach(input => dataGrid.append(input))
+    formularioEdicion.append(dataGrid)
+    formularioEdicion.append(botonEditar)
+    formularioEdicion.append(botonCerrar)
+    document.body.append(formularioEdicion)
+}
+
+async function eliminarAlumno(id) {
+    console.log(id)
+    const respuesta = await fetch(`http://localhost:3000/alumnos/${id}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        credentials: "include"
+    }) 
+
+    renderizarLista()
+}
+
+async function crearAlumno() {
+    const respuesta = await fetch(`http://localhost:3000/cursos`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        credentials: "include"
+    })        
+    const cursos = await respuesta.json()
+
+    const formularioEdicion = document.createElement('form')
+    formularioEdicion.id = "formularioEdicion"
+    formularioEdicion.className = "modal-content"
+
+    const dataGrid = document.createElement('div')
+    dataGrid.className = "data-grid"
+
+    const campos = {
+        inputNombre_alum: 'text',
+        inputApellido_alum: 'text',
+        inputDNI: 'text',
+        inputId_curso: 'select',
+        inputGrupo: 'text',
+        inputTelefono: 'text',
+        inputDireccion: 'text',
+        inputContactos_emergencia: 'text',
+        inputObservaciones: 'text',
+    }
+
+    const inputs = {}
+    for (const [nombre, tipo] of Object.entries(campos)) {
+        const input = document.createElement(tipo == 'text' ? 'input' : 'select')
+        // Sacamos el input y queda el mismo nombre que los campos recibidos de la API
+        const campo = nombre.replace(/^input/, '').toLowerCase()
+        if (campo != 'id_curso') {
+            input.placeholder = campo
+            input.type = tipo
+        }
+        input.className = 'data-value editable'
+        inputs[nombre] = input
+    }
+
+    cursos.forEach(curso => {
+        const option = document.createElement('option')
+        option.value = curso.id_curso
+        option.textContent = `${curso.anio} ${curso.division} ${curso.nombre_especialidad} ${curso.descripcion_turno}`
+        inputs.inputId_curso.appendChild(option)
+    }) 
+    
+    let botonCerrar = document.createElement("button")
+    botonCerrar.innerHTML = "Cerrar"
+    botonCerrar.addEventListener("click", (e) => {
+        e.preventDefault()
+        botonCerrar.parentElement.remove()
+    })
+
+    let botonEditar = document.createElement("button")
+    botonEditar.innerHTML = "Guardar cambios"
+    botonEditar.addEventListener("click", async (e) => {
+        e.preventDefault()
+        let alumno = {}
+        for (const [nombre, tipo] of Object.entries(campos)) {
+            const campo = nombre.replace(/^input/, '').toLowerCase()
+            alumno[campo] = inputs[nombre].value
+        }
+        console.log(alumno)
+        try {
+            const respuestaEdit = await fetch(`http://localhost:3000/alumnos/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: "include",
+                body: JSON.stringify(alumno)
+            })
+        } catch (error) {
+            console.log(error)
+            return
+        }
+        botonEditar.parentElement.remove()
+        renderizarLista()
+    }) 
+    Object.values(inputs).forEach(input => dataGrid.append(input))
+    formularioEdicion.append(dataGrid)
+    formularioEdicion.append(botonEditar)
+    formularioEdicion.append(botonCerrar)
+    document.body.append(formularioEdicion)
+}
+
+async function renderizarLista(nombre, apellido) {
     let listaResultados = document.querySelector("#listaResultados")
     listaResultados.innerHTML = ""
+
+    try {
+        const respuesta = await fetch('http://localhost:3000/alumnos/', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: "include"
+        }) 
+
+        const resultado = await respuesta.json()
+        alumnos = resultado
+    } catch (error) {
+        console.log(error)        
+    }
 
     alumnos?.forEach(alumno => {
         let contenedor = document.createElement("div")
@@ -75,7 +300,8 @@ function renderizarLista(nombre, apellido) {
                     <span>${alumno.anio + " " + alumno.division + " " + alumno.nombre_especialidad}</span>
                 </div>
                 <button class="btn-ver" onclick="verAlumno(${alumno.id_alum})">Ver</button>
-                <button class="btn-editar">Editar</button>
+                <button class="btn-editar" onclick="editarAlumno(${alumno.id_alum})">Editar</button>
+                <button class="btn-eliminar" onclick="eliminarAlumno(${alumno.id_alum})">Eliminar</button> 
             </div>
         `
         listaResultados.append(contenedor)    
@@ -99,19 +325,5 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.log(error)
     }
 
-    try {
-        const respuesta = await fetch('http://localhost:3000/alumnos/', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            credentials: "include"
-        }) 
-
-        const resultado = await respuesta.json()
-        alumnos = resultado
-
-    } catch (error) {
-        console.log(error)        
-    }
+    renderizarLista()
 });
