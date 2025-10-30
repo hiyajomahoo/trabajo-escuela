@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Servidor: 127.0.0.1
--- Tiempo de generación: 24-09-2025 a las 17:18:20
--- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.2.12
+-- Host: 127.0.0.1
+-- Generation Time: Oct 30, 2025 at 06:28 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,29 +18,39 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `escuela`
+-- Database: `escuela`
 --
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `alumnos`
+-- Table structure for table `alumnos`
 --
 
 CREATE TABLE `alumnos` (
   `id_alum` int(11) NOT NULL,
+  `dni` varchar(8) NOT NULL,
   `nombre_alum` varchar(30) NOT NULL,
   `apellido_alum` varchar(30) NOT NULL,
   `id_curso` int(2) NOT NULL,
   `grupo` varchar(1) NOT NULL,
-  `correo_inst_alum` varchar(60) NOT NULL,
-  `correo_alt_alum` varchar(60) NOT NULL
+  `telefono` varchar(15) NOT NULL,
+  `direccion` varchar(50) NOT NULL,
+  `contactos_emergencia` varchar(255) NOT NULL,
+  `observaciones` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci ROW_FORMAT=COMPACT;
+
+--
+-- Dumping data for table `alumnos`
+--
+
+INSERT INTO `alumnos` (`id_alum`, `dni`, `nombre_alum`, `apellido_alum`, `id_curso`, `grupo`, `telefono`, `direccion`, `contactos_emergencia`, `observaciones`) VALUES
+(1, '47963144', 'Patricio Joaquin', 'Muras Caravello', 47, 'A', '1122383785', 'Av. Debenedetti 2100', 'Juan Manuel Muras\r\nPadre\r\n1170384924', 'Ninguna');
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `cursos`
+-- Table structure for table `cursos`
 --
 
 CREATE TABLE `cursos` (
@@ -54,7 +64,7 @@ CREATE TABLE `cursos` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci ROW_FORMAT=COMPACT;
 
 --
--- Volcado de datos para la tabla `cursos`
+-- Dumping data for table `cursos`
 --
 
 INSERT INTO `cursos` (`id_curso`, `anio`, `division`, `id_especialidad`, `id_turno`, `id_precep_curricular`, `id_precep_taller`) VALUES
@@ -111,7 +121,7 @@ INSERT INTO `cursos` (`id_curso`, `anio`, `division`, `id_especialidad`, `id_tur
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `especialidades`
+-- Table structure for table `especialidades`
 --
 
 CREATE TABLE `especialidades` (
@@ -121,7 +131,7 @@ CREATE TABLE `especialidades` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci ROW_FORMAT=COMPACT;
 
 --
--- Volcado de datos para la tabla `especialidades`
+-- Dumping data for table `especialidades`
 --
 
 INSERT INTO `especialidades` (`id_especialidad`, `nombre_especialidad`, `descripcion_especialidad`) VALUES
@@ -133,7 +143,7 @@ INSERT INTO `especialidades` (`id_especialidad`, `nombre_especialidad`, `descrip
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `materias`
+-- Table structure for table `materias`
 --
 
 CREATE TABLE `materias` (
@@ -145,7 +155,7 @@ CREATE TABLE `materias` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
--- Volcado de datos para la tabla `materias`
+-- Dumping data for table `materias`
 --
 
 INSERT INTO `materias` (`id_mat`, `nombre_mat`, `anio_mat`, `id_especialidad`, `id_tm`) VALUES
@@ -339,7 +349,7 @@ INSERT INTO `materias` (`id_mat`, `nombre_mat`, `anio_mat`, `id_especialidad`, `
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `preceptores`
+-- Table structure for table `preceptores`
 --
 
 CREATE TABLE `preceptores` (
@@ -353,7 +363,7 @@ CREATE TABLE `preceptores` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `profesores`
+-- Table structure for table `profesores`
 --
 
 CREATE TABLE `profesores` (
@@ -367,7 +377,7 @@ CREATE TABLE `profesores` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `tipomateria`
+-- Table structure for table `tipomateria`
 --
 
 CREATE TABLE `tipomateria` (
@@ -376,7 +386,7 @@ CREATE TABLE `tipomateria` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
--- Volcado de datos para la tabla `tipomateria`
+-- Dumping data for table `tipomateria`
 --
 
 INSERT INTO `tipomateria` (`id_tm`, `nombre_tm`) VALUES
@@ -386,7 +396,7 @@ INSERT INTO `tipomateria` (`id_tm`, `nombre_tm`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `turnos`
+-- Table structure for table `turnos`
 --
 
 CREATE TABLE `turnos` (
@@ -396,7 +406,7 @@ CREATE TABLE `turnos` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci ROW_FORMAT=COMPACT;
 
 --
--- Volcado de datos para la tabla `turnos`
+-- Dumping data for table `turnos`
 --
 
 INSERT INTO `turnos` (`id_turno`, `nombre_turno`, `descripcion_turno`) VALUES
@@ -404,19 +414,39 @@ INSERT INTO `turnos` (`id_turno`, `nombre_turno`, `descripcion_turno`) VALUES
 (2, 'T', 'Tarde'),
 (3, 'V', 'Vespertino');
 
+-- --------------------------------------------------------
+
 --
--- Índices para tablas volcadas
+-- Table structure for table `usuario_sistema`
+--
+
+CREATE TABLE `usuario_sistema` (
+  `id_usuario` int(11) NOT NULL,
+  `nombre_usuario` varchar(50) NOT NULL,
+  `contraseña` varchar(255) NOT NULL,
+  `admin` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `usuario_sistema`
+--
+
+INSERT INTO `usuario_sistema` (`id_usuario`, `nombre_usuario`, `contraseña`, `admin`) VALUES
+(7, 'patitow', '$2b$12$.MxDcVU6465ZZSWpEgbAUuhdEDwomkKMLZAUGCPQobtG5l7p2LY1i', 0);
+
+--
+-- Indexes for dumped tables
 --
 
 --
--- Indices de la tabla `alumnos`
+-- Indexes for table `alumnos`
 --
 ALTER TABLE `alumnos`
   ADD PRIMARY KEY (`id_alum`),
   ADD KEY `id_curso` (`id_curso`);
 
 --
--- Indices de la tabla `cursos`
+-- Indexes for table `cursos`
 --
 ALTER TABLE `cursos`
   ADD PRIMARY KEY (`id_curso`),
@@ -425,94 +455,106 @@ ALTER TABLE `cursos`
   ADD KEY `id_especialidad` (`id_especialidad`);
 
 --
--- Indices de la tabla `especialidades`
+-- Indexes for table `especialidades`
 --
 ALTER TABLE `especialidades`
   ADD PRIMARY KEY (`id_especialidad`);
 
 --
--- Indices de la tabla `materias`
+-- Indexes for table `materias`
 --
 ALTER TABLE `materias`
   ADD PRIMARY KEY (`id_mat`),
   ADD KEY `id_tm` (`id_tm`);
 
 --
--- Indices de la tabla `preceptores`
+-- Indexes for table `preceptores`
 --
 ALTER TABLE `preceptores`
   ADD PRIMARY KEY (`id_precep`);
 
 --
--- Indices de la tabla `profesores`
+-- Indexes for table `profesores`
 --
 ALTER TABLE `profesores`
   ADD PRIMARY KEY (`id_prof`);
 
 --
--- Indices de la tabla `tipomateria`
+-- Indexes for table `tipomateria`
 --
 ALTER TABLE `tipomateria`
   ADD PRIMARY KEY (`id_tm`);
 
 --
--- Indices de la tabla `turnos`
+-- Indexes for table `turnos`
 --
 ALTER TABLE `turnos`
   ADD PRIMARY KEY (`id_turno`);
 
 --
--- AUTO_INCREMENT de las tablas volcadas
+-- Indexes for table `usuario_sistema`
+--
+ALTER TABLE `usuario_sistema`
+  ADD PRIMARY KEY (`id_usuario`);
+
+--
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT de la tabla `alumnos`
+-- AUTO_INCREMENT for table `alumnos`
 --
 ALTER TABLE `alumnos`
-  MODIFY `id_alum` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_alum` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT de la tabla `cursos`
+-- AUTO_INCREMENT for table `cursos`
 --
 ALTER TABLE `cursos`
   MODIFY `id_curso` int(2) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 
 --
--- AUTO_INCREMENT de la tabla `especialidades`
+-- AUTO_INCREMENT for table `especialidades`
 --
 ALTER TABLE `especialidades`
   MODIFY `id_especialidad` int(1) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
--- AUTO_INCREMENT de la tabla `preceptores`
+-- AUTO_INCREMENT for table `preceptores`
 --
 ALTER TABLE `preceptores`
   MODIFY `id_precep` int(2) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `profesores`
+-- AUTO_INCREMENT for table `profesores`
 --
 ALTER TABLE `profesores`
   MODIFY `id_prof` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `tipomateria`
+-- AUTO_INCREMENT for table `tipomateria`
 --
 ALTER TABLE `tipomateria`
   MODIFY `id_tm` int(1) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT de la tabla `turnos`
+-- AUTO_INCREMENT for table `turnos`
 --
 ALTER TABLE `turnos`
   MODIFY `id_turno` int(1) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- Restricciones para tablas volcadas
+-- AUTO_INCREMENT for table `usuario_sistema`
+--
+ALTER TABLE `usuario_sistema`
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- Constraints for dumped tables
 --
 
 --
--- Filtros para la tabla `alumnos`
+-- Constraints for table `alumnos`
 --
 ALTER TABLE `alumnos`
   ADD CONSTRAINT `alumnos_ibfk_1` FOREIGN KEY (`id_curso`) REFERENCES `cursos` (`id_curso`) ON DELETE CASCADE ON UPDATE CASCADE;
