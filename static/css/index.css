@@ -1,49 +1,44 @@
-/* Estilos generales del cuerpo de la página */
 body {
     margin: 0;
     font-family: 'Poppins', sans-serif;
-    background-color: #f4f7fc; /* Un fondo gris claro para resaltar el contenedor */
+    background-color: #f4f7fc; 
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
 }
 
-/* Contenedor principal del formulario */
 .login-container {
     background-color: #ffffff;
     padding: 40px;
-    border-radius: 16px; /* Bordes redondeados */
-    border: 3px solid #ffca28; /* Borde amarillo/dorado */
+    border-radius: 16px; 
+    border: 3px solid #ffca28; 
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     width: 100%;
     max-width: 380px;
     text-align: center;
     box-sizing: border-box;
+    margin: 0 20px;
 }
 
-/* Estilo para la imagen del logo */
 .logo {
-    width: 100px; /* Ajusta el tamaño según tu logo */
+    width: 100px; 
     margin-bottom: 20px;
 }
 
-/* Estilo para el título "Inicio de Secciones" */
 h1 {
-    color: #0d47a1; /* Azul oscuro para el título */
+    color: #0d47a1;
     font-size: 24px;
     font-weight: 700;
     margin-top: 0;
     margin-bottom: 30px;
 }
 
-/* Agrupación de etiqueta y campo de entrada */
 .input-group {
     margin-bottom: 20px;
     text-align: left;
 }
 
-/* Estilo para las etiquetas "Usuario:" y "Contraseña:" */
 label {
     display: block;
     margin-bottom: 8px;
@@ -52,39 +47,38 @@ label {
     font-size: 14px;
 }
 
-/* Estilo para los campos de texto y contraseña */
 input[type="text"],
 input[type="password"] {
     width: 100%;
     padding: 12px 15px;
-    border: 1px solid #ced4da; /* Borde gris claro */
+    border: 1px solid #ced4da; 
     border-radius: 8px;
     font-size: 16px;
-    box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
+    box-sizing: border-box; 
 }
 
 input[type="text"]:focus,
 input[type="password"]:focus {
     outline: none;
-    border-color: #0d47a1; /* Cambia el color del borde al hacer foco */
+    border-color: #0d47a1; 
     box-shadow: 0 0 0 2px rgba(13, 71, 161, 0.2);
 }
 
-/* Estilo para el botón de "Ingresar" */
 button {
     width: 100%;
     padding: 14px;
-    background-color: #0d47a1; /* Azul principal */
+    background-color: #0d47a1; 
     color: #ffffff;
     border: none;
     border-radius: 8px;
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.3s ease; /* Transición suave al pasar el mouse */
+    transition: background-color 0.3s ease; 
     margin-top: 10px;
 }
 
 button:hover {
-    background-color: #0a3a82; /* Un azul un poco más oscuro al pasar el mouse */
+    background-color: #0a3a82; 
 }
+

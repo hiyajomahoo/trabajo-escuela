@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscar Alumno</title>
+    <link rel="stylesheet" href="./css/administracion.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-left">
+            <img src="./img/logo_escudo_escuela.jpg" alt="Logo Escuela" class="logo">
+            <a href="./buscar.html" class="nav-btn">Buscar alumno</a>
+        </div>
+    </nav>
+
+    <section class="busqueda">
+        <form id="formularioBusqueda">
+            <input type="text" placeholder="Buscar alumno..." name="busqueda" class="input-buscar">
+            <button type="submit" class="btn-buscar">Buscar</button>
+        </form>
+    </section>
+
+    <div id="listaResultados" class="lista-resultados">
+        <div class="resultado-item">
+            <span class="nombre-alumno">Alumno Ejemplo</span>
+            <button class="btn-ver">Ver</button>
+            <button class="btn-editar">Editar</button>
+        </div>
+    </div>
+
+    <script src="./js/administracion.js"></script>
+</body>
+</html>

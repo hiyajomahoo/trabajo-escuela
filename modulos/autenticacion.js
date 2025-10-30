@@ -4,6 +4,7 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import cookieParser from 'cookie-parser'
 import { configDotenv } from 'dotenv'
+configDotenv()
 
 const router = express.Router()
 
@@ -58,10 +59,10 @@ router.post('/iniciarSesion', async (req, res) => {
         const [respuesta] = await conexion.query(consulta, [nombre])
         conexion.release()
 
-        if (!respuesta[0]) return res.status(404).send("El usuario no existe")
+        if (!respuesta[0]) return res.status(404).json({message: "El usuario no existe"})
 
         if (!await bcrypt.compare(password, respuesta[0].contraseña)) {
-            return res.status(401).send("Contraseña incorrecta.")
+            return res.status(401).json({message: "Contraseña incorrecta."})
         }
 
         const token = jwt.sign(
@@ -70,16 +71,17 @@ router.post('/iniciarSesion', async (req, res) => {
             { expiresIn: '12h' }
         )
 
-        res.cookie('tokenSesion', token, {
+        res.cookie('token', token, {
             httpOnly: true,
             sameSite: 'none',
-            secure: true,
+            secure: false,
             maxAge: 43200000 // 12 horas en milisegundos
         })
 
         res.status(200).json({message: "Inicio de sesion satisfactorio!", token})
     } catch (error) {
-        res.status(500).send("Error en la consulta")
+        console.log(error)
+        res.status(500).json({message: "Error en la consulta"})
     }
 })
 
@@ -98,7 +100,7 @@ router.post('/iniciarSesion', async (req, res) => {
         - 500 Internal server error: Hubo un error en la consulta
 */
 
-router.post('/crearUsuario', verificarUsuario, async (req, res) => {
+router.post('/crearUsuario', async (req, res) => {
     const {nombre, password} = req.body
     const rondasSalt = 12
 

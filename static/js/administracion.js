@@ -1,5 +1,4 @@
-const formularioBusqueda = document.forms["formularioBusqueda"]
-const listaResultados = document.querySelector("#listaResultados")
+var alumnos
 
 async function verAlumno(id) {
     let contenedor = document.createElement('div')
@@ -61,51 +60,27 @@ async function verAlumno(id) {
     document.body.append(contenedor)
 }
 
-formularioBusqueda.addEventListener('submit', async (e) => {
-    e.preventDefault()
-
-    if (!formularioBusqueda.nombre.value) {
-        console.log("Faltan argumentos")
-        return
-    }
-
-    const nombre = formularioBusqueda.nombre.value
-    const apellido = formularioBusqueda.apellido.value
-
-    let alumno = {nombre: nombre}
-
-    if (apellido && apellido.length > 0) {
-        alumno.apellido = apellido
-    }
-
-    const respuesta = await fetch('http://localhost:3000/alumnos/buscarNombre', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(alumno),
-        credentials: "include"
-    }) 
-
-    const resultado = await respuesta.json()
-
+function renderizarLista(nombre, apellido) {
+    let listaResultados = document.querySelector("#listaResultados")
     listaResultados.innerHTML = ""
 
-    resultado?.forEach(alumno => {
+    alumnos?.forEach(alumno => {
         let contenedor = document.createElement("div")
         contenedor.className = "student-card"
-        contenedor.setAttribute("onclick", `verAlumno(${alumno.id_alum})`)
         contenedor.innerHTML = `
-            <div class="student-name">${alumno.nombre_alum + ' ' + alumno.apellido_alum}</div>
-            <div class="student-info">
-                <span>${alumno.dni}</span>
-                <span>${alumno.anio + " " + alumno.division + " " + alumno.nombre_especialidad}</span>
+            <div class="resultado-item">
+                <span class="nombre-alumno">${alumno.nombre_alum + ' ' + alumno.apellido_alum}</span>
+                <div class="student-info">
+                    <span>${alumno.dni}</span>
+                    <span>${alumno.anio + " " + alumno.division + " " + alumno.nombre_especialidad}</span>
+                </div>
+                <button class="btn-ver" onclick="verAlumno(${alumno.id_alum})">Ver</button>
+                <button class="btn-editar">Editar</button>
             </div>
         `
-
-        listaResultados.append(contenedor)
+        listaResultados.append(contenedor)    
     })
-})
+}
 
 document.addEventListener("DOMContentLoaded", async () => {
     try {
@@ -117,9 +92,26 @@ document.addEventListener("DOMContentLoaded", async () => {
             credentials: 'include'
         })
         if (data.status !== 200) {
+            console.log(data.status)
             window.location.href = "./index.html"
         }
     } catch (error) {
         console.log(error)
+    }
+
+    try {
+        const respuesta = await fetch('http://localhost:3000/alumnos/', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: "include"
+        }) 
+
+        const resultado = await respuesta.json()
+        alumnos = resultado
+
+    } catch (error) {
+        console.log(error)        
     }
 });

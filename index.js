@@ -2,15 +2,26 @@ import express from "express"
 import pool from "./modulos/conexion_sql.js"
 import autenticacion, {verificarUsuario} from "./modulos/autenticacion.js"
 import cors from "cors"
+import cookieParser from "cookie-parser"
 const app = express()
 const puerto = 3000
 
 app.use(express.json())
 
 // Autenticacion
-app.use(cors())
+app.use(cors({
+    origin: [
+        'http://localhost',
+        'http://localhost:80', 
+        'http://127.0.0.1',
+        'http://127.0.0.1:80',
+        'http://127.0.0.1:5500'
+    ],
+    credentials: true
+}))
 app.use('/usuarios', autenticacion)
-/* app.use(verificarUsuario) */
+app.use(cookieParser())
+app.use(verificarUsuario)
 
 /* 
     GET /alumnos/
@@ -26,7 +37,7 @@ app.use('/usuarios', autenticacion)
 app.get('/alumnos', async (req, res) => {
     try {
         const conexion = await pool.getConnection()
-        const [respuesta] = await conexion.query("SELECT * FROM alumnos")
+        const [respuesta] = await conexion.query("SELECT alumnos.id_alum, alumnos.dni, alumnos.nombre_alum, alumnos.apellido_alum, cursos.anio, cursos.division, especialidades.nombre_especialidad FROM alumnos JOIN cursos ON alumnos.id_curso = cursos.id_curso JOIN especialidades ON cursos.id_especialidad = especialidades.id_especialidad")
         conexion.release()
         res.json(respuesta)
     } catch (error) {
@@ -125,6 +136,7 @@ app.post('/alumnos', async (req, res) => {
         conexion.release()
         res.status(201).send("Alumno agregado satisfactoriamente")
     } catch (error) {
+        console.log(error)
         res.status(500).send("Error al realizar la consulta.")
     }
 })
