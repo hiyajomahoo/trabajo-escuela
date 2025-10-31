@@ -1,6 +1,6 @@
 FROM node:20
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
 COPY package*.json ./
 
@@ -10,4 +10,4 @@ COPY . .
 
 EXPOSE 3000
 
-CMD ["node", "src/server.js"]
+CMD ["node", "src/index.js"]

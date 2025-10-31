@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 30, 2025 at 10:17 PM
+-- Generation Time: Oct 31, 2025 at 03:34 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -432,7 +432,7 @@ CREATE TABLE `usuario_sistema` (
 --
 
 INSERT INTO `usuario_sistema` (`id_usuario`, `nombre_usuario`, `contraseña`, `admin`) VALUES
-(8, 'administrador', '$2b$12$kmmwN8UK2HYg6Z5WiQyJI.XDaBE0Ht1mjyhtVgQJMhRY.YRQB4c8y', 0);
+(10, 'administrador', '$2b$12$Sy5uWlVaz2LA5JupGMdlsO7Awgog8Ti4HPWBbPMDAGYtk98SC4yze', 0);
 
 --
 -- Indexes for dumped tables
@@ -547,7 +547,7 @@ ALTER TABLE `turnos`
 -- AUTO_INCREMENT for table `usuario_sistema`
 --
 ALTER TABLE `usuario_sistema`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- Constraints for dumped tables

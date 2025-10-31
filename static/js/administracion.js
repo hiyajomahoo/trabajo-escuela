@@ -261,8 +261,9 @@ async function crearAlumno() {
         let alumno = {}
         for (const [nombre, tipo] of Object.entries(campos)) {
             const campo = nombre.replace(/^input/, '').toLowerCase()
-            if (alumno[campo].length < 1) return
             alumno[campo] = inputs[nombre].value
+            if (tipo == "select") continue
+            if (alumno[campo].length < 1) return
         }
 
         try {
